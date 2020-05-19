@@ -158,14 +158,14 @@
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="checkBox_2">
+       <widget class="QCheckBox" name="chxShowSend">
         <property name="text">
          <string>显示发送</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="checkBox_3">
+       <widget class="QCheckBox" name="chxShowTime">
         <property name="text">
          <string>显示时间</string>
         </property>
@@ -187,6 +187,20 @@
      <string>发送设置</string>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
+     <item row="1" column="0">
+      <widget class="QCheckBox" name="chkRepeatSnd">
+       <property name="text">
+        <string>重复发送</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>ms</string>
+       </property>
+      </widget>
+     </item>
      <item row="0" column="1">
       <widget class="QRadioButton" name="rbtnSndHEX">
        <property name="text">
@@ -201,15 +215,8 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="QCheckBox" name="checkBox_4">
-       <property name="text">
-        <string>重复发送</string>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="1">
-      <widget class="QSpinBox" name="spinBox">
+      <widget class="QSpinBox" name="sbTimeInterval">
        <property name="maximum">
         <number>9999</number>
        </property>
@@ -218,10 +225,10 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="2">
-      <widget class="QLabel" name="label_7">
+     <item row="2" column="0">
+      <widget class="QPushButton" name="btnStopRepeat">
        <property name="text">
-        <string>ms</string>
+        <string>停止发送</string>
        </property>
       </widget>
      </item>

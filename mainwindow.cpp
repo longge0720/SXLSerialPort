@@ -2,7 +2,11 @@
 #include "ui_mainwindow.h"
 #include <QDebug>
 #include <QMessageBox>
+#include <QFileDialog>
 #include "config.h"
+#include <QTime>
+#include <QDataStream>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -89,9 +93,14 @@ void MainWindow::initConfig()
         Config::SerialPortStu = "off";
     }
     connect(ui->btnOpen, SIGNAL(clicked(bool)),this,SLOT(saveConfig()));
+    connect(&timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
+
     ui->rbtnRcvASCII->setChecked(true);
     ui->rbtnSndASCII->setChecked(true);
     ui->btnClose->setDisabled(true);
+    ui->btnSend->setEnabled(false);
+    ui->chkRepeatSnd->setEnabled(false);
+
 }
 
 MainWindow::~MainWindow()
@@ -101,11 +110,41 @@ MainWindow::~MainWindow()
 
 void MainWindow::serialPort_readyRead()
 {
+    QString nowTime = NULL;
+
     //从接收缓冲区中读取数据
+    QString head = "[receive:] ";
     QByteArray buffer = m_serialPort.readAll();
+
+
+//    buffer=head+buffer;
+    if(ui->chxShowTime->isChecked())
+    {
+        QTime time(QTime::currentTime());
+        nowTime = time.toString("hh:mm:ss:zzz");
+        nowTime = "[ "+nowTime+" ] ";
+    }
     //从界面中读取以前收到的数据
     QString recv = ui->rcvTxtEdit->toPlainText();
-    recv += QString(buffer);
+    recv+=head;
+    recv+=nowTime;
+    if(ui->rbtnRcvHEX->isChecked())
+    {
+        QDataStream out(&buffer,QIODevice::ReadWrite);
+        while(!out.atEnd())
+        {
+            qint8 outChar = 0;
+            out>>outChar;
+            QString str = QString("%1").arg(outChar&0xff,2,16,QLatin1Char('0'));
+            recv+=str;
+            recv+=" ";
+
+        }
+
+    }else
+    {
+        recv += QString(buffer);
+    }
     if(ui->chkAutoLine->isChecked())
     {
         recv += QString("\n");
@@ -118,7 +157,6 @@ void MainWindow::serialPort_readyRead()
 
 void MainWindow::on_btnOpen_clicked()
 {
-    static bool btnflag = false;
 
     if(!m_serialPort.isOpen())
     {
@@ -214,10 +252,10 @@ void MainWindow::on_btnOpen_clicked()
         ui->cbxDataBits->setEnabled(false);
         ui->cbxParity->setEnabled(false);
         ui->cbxStopBits->setEnabled(false);
-         ui->cbxFlowControl->setEnabled(false);
-        btnflag = true;
+        ui->cbxFlowControl->setEnabled(false);
         ui->btnOpen->setDisabled(true);
         ui->btnClose->setEnabled(true);
+        ui->chkRepeatSnd->setEnabled(true);
 
     }
     else
@@ -232,9 +270,13 @@ void MainWindow::on_btnOpen_clicked()
         ui->cbxParity->setEnabled(true);
         ui->cbxStopBits->setEnabled(true);
         ui->cbxFlowControl->setEnabled(true);
-        btnflag = false;
+
     }
 
+    if(m_serialPort.isOpen())
+    {
+         ui->btnSend->setEnabled(true);
+    }
     ui->btnClose->setEnabled(true);
     ui->btnOpen->setDisabled(true);
     ui->btnRefreshPort->setEnabled(false);
@@ -256,10 +298,47 @@ void MainWindow::saveConfig()
 
 void MainWindow::on_btnSend_clicked()
 {
+    QString nowTime = NULL;
+    QByteArray sendData;
+    QByteArray showData;
     QString str = ui->sndTxtEdit->document()->toPlainText();
-    QByteArray sendData = str.toUtf8();
+    showData = str.toUtf8();
+    if(ui->rbtnSndHEX->isChecked())
+    {
+        StringToHex(str, sendData);
+//        sendData = HexStringToByteArray(str);
+    }else
+    {
+         sendData = str.toUtf8();
+    }
+
+
     m_serialPort.write(sendData);
-    ui->cbxSndHistory->addItem(sendData);
+    ui->cbxSndHistory->addItem(showData);
+
+    if(ui->chxShowSend->isChecked())
+    {
+        QString head = "[send:] ";
+        QString recv = ui->rcvTxtEdit->toPlainText();
+        if(ui->chxShowTime->isChecked())
+        {
+            QTime time(QTime::currentTime());
+            nowTime = time.toString("hh:mm:ss:zzz");
+            nowTime = "[ "+nowTime+" ] ";
+        }
+        recv+=head;
+        recv+=nowTime;
+        recv += QString(showData);
+        if(ui->chkAutoLine->isChecked())
+        {
+            recv += QString("\n");
+        }
+
+        //清空以前的显示
+        ui->rcvTxtEdit->clear();
+        //重新显示
+        ui->rcvTxtEdit->append(recv);
+    }
 }
 
 void MainWindow::on_btnClose_clicked()
@@ -285,7 +364,10 @@ void MainWindow::on_btnClose_clicked()
     }
     ui->btnClose->setDisabled(true);
     ui->btnOpen->setEnabled(true);
-     ui->btnRefreshPort->setEnabled(true);
+    ui->btnRefreshPort->setEnabled(true);
+    ui->btnSend->setEnabled(false);
+    ui->chkRepeatSnd->setEnabled(false);
+
 }
 
 void MainWindow::on_btnClearRcv_clicked()
@@ -318,3 +400,138 @@ void MainWindow::on_cbxPortName_activated(const QString &arg1)
 {
     on_btnRefreshPort_clicked();
 }
+
+
+void MainWindow::saveFile()
+{
+    QString path = QFileDialog::getSaveFileName(this,
+                                                tr("Open File"),
+                                                ".",
+                                                tr("Text Files(*.txt)"));
+    if(!path.isEmpty()){
+        QFile file(path);
+        if(!file.open(QIODevice::WriteOnly | QIODevice::Text)){
+            QMessageBox::warning(this, tr("Write File"),
+                                 tr("Can't open file:\n%1").arg(path));
+            return;
+        }
+        QTextStream out(&file);
+        out << ui->rcvTxtEdit->toPlainText();
+        file.close();
+    } else {
+        QMessageBox::warning(this, tr("Path"),
+                             tr("You did not select any file."));
+    }
+}
+
+
+void MainWindow::on_btnSaveRcv_clicked()
+{
+    saveFile();
+}
+
+void MainWindow::onTimeout()
+{
+    on_btnSend_clicked();
+}
+
+void MainWindow::on_chkRepeatSnd_stateChanged(int arg1)
+{
+    if(ui->chkRepeatSnd->isChecked())
+    {
+        if(m_serialPort.isOpen())
+        {
+            int timeSpace = ui->sbTimeInterval->value();
+            if( (timeSpace<20) || (timeSpace >9999) )
+            {
+                QMessageBox::warning(this, tr("TimeError"),
+                                     tr("Time interval: 20 < time < 9999 "));
+                return ;
+            }
+            else
+            {
+                timer.start(timeSpace);
+            }
+        }
+
+
+    }
+    else
+    {
+        timer.stop();
+    }
+}
+
+
+
+
+char MainWindow::ConvertHexChar(char ch)
+{
+    if((ch >= '0') && (ch <= '9'))
+        return ch-0x30;
+    else if((ch >= 'A') && (ch <= 'F'))
+        return ch-'A'+10;
+    else if((ch >= 'a') && (ch <= 'f'))
+        return ch-'a'+10;
+    else return (-1);
+}
+
+
+void MainWindow::StringToHex(QString str, QByteArray &senddata)
+{
+    int hexdata,lowhexdata;
+    int hexdatalen = 0;
+    int len = str.length();
+    senddata.resize(len/2);
+    char lstr,hstr;
+    for(int i=0; i<len; )
+    {
+        //char lstr,
+//        hstr=str[i].toAscii();
+        hstr=str[i].toLatin1();
+        if(hstr == ' ')
+        {
+            i++;
+            continue;
+        }
+        i++;
+        if(i >= len)
+            break;
+//        lstr = str[i].toAscii();
+         lstr = str[i].toLatin1();
+        hexdata = ConvertHexChar(hstr);
+        lowhexdata = ConvertHexChar(lstr);
+        if((hexdata == 16) || (lowhexdata == 16))
+            break;
+        else
+            hexdata = hexdata*16+lowhexdata;
+        i++;
+        senddata[hexdatalen] = (char)hexdata;
+        hexdatalen++;
+    }
+    senddata.resize(hexdatalen);
+}
+
+
+
+//这个中间必须有空格
+QByteArray MainWindow::HexStringToByteArray(QString HexString)
+ {
+     bool ok;
+     QByteArray ret;
+     HexString = HexString.trimmed();
+     HexString = HexString.simplified();
+     QStringList sl = HexString.split(" ");
+
+     foreach (QString s, sl) {
+         if(!s.isEmpty()) {
+             char c = s.toInt(&ok,16)&0xFF;
+             if(ok){
+                 ret.append(c);
+             }else{
+                 qDebug()<<"非法的16进制字符："<<s;
+             }
+         }
+     }
+     return ret;
+ }

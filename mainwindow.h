@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QSerialPort>        //提供访问串口的功能
 #include <QSerialPortInfo>    //提供系统中存在的串口的信息
+#include <QTimer>
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -34,12 +35,22 @@ private slots:
 
     void on_cbxPortName_activated(const QString &arg1);
 
+    void on_btnSaveRcv_clicked();
+    void onTimeout();
+
+    void on_chkRepeatSnd_stateChanged(int arg1);
+
 private:
     Ui::MainWindow *ui;
     QSerialPort m_serialPort;
     QString Available_serial_ports;
+    QTimer timer;
 
     void initUi();
     void initConfig();
+    void saveFile();
+    char ConvertHexChar(char ch);
+    void StringToHex(QString str, QByteArray &senddata);
+    QByteArray HexStringToByteArray(QString HexString);
 };
 #endif // MAINWINDOW_H
