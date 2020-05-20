@@ -187,20 +187,6 @@
      <string>发送设置</string>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
-     <item row="1" column="0">
-      <widget class="QCheckBox" name="chkRepeatSnd">
-       <property name="text">
-        <string>重复发送</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QLabel" name="label_7">
-       <property name="text">
-        <string>ms</string>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="1">
       <widget class="QRadioButton" name="rbtnSndHEX">
        <property name="text">
@@ -208,10 +194,10 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="0">
-      <widget class="QRadioButton" name="rbtnSndASCII">
+     <item row="1" column="2">
+      <widget class="QLabel" name="label_7">
        <property name="text">
-        <string>ASCII</string>
+        <string>ms</string>
        </property>
       </widget>
      </item>
@@ -225,10 +211,17 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
-      <widget class="QPushButton" name="btnStopRepeat">
+     <item row="1" column="0">
+      <widget class="QCheckBox" name="chkRepeatSnd">
        <property name="text">
-        <string>停止发送</string>
+        <string>重复发送</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QRadioButton" name="rbtnSndASCII">
+       <property name="text">
+        <string>ASCII</string>
        </property>
       </widget>
      </item>
