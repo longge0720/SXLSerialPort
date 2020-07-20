@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     int width = this->geometry().width();
     int height = this->geometry().height();
     this->setFixedSize(width,height);
+    this->setWindowTitle(QString("Wisdom-ZD:嵌入式软件"));
 
     //初始化串口端口号列表
     foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts())
