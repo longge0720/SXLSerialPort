@@ -359,6 +359,9 @@
    <property name="text">
     <string>CalcBinSum</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+S</string>
+   </property>
   </action>
  </widget>
  <resources>
