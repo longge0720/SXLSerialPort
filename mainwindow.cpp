@@ -544,7 +544,7 @@ void MainWindow::on_actionCalcBinSum_triggered()
 {
     QString qfileName;
     qfileName = QFileDialog::getOpenFileName(this,
-                                             tr("Open file"), "", tr("All Files (*.*);; Bin Files (*.hex *.bin *.exe)"));
+                                             tr("Open file"), "", tr("Bin Files (*.hex *.bin *.exe);; All Files (*.*)"));
 
     if (!qfileName.isNull())
     {
