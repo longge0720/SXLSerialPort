@@ -5,6 +5,7 @@
 #include <QSerialPort>        //提供访问串口的功能
 #include <QSerialPortInfo>    //提供系统中存在的串口的信息
 #include <QTimer>
+#include "mytools.h"
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -40,12 +41,14 @@ private slots:
 
     void on_chkRepeatSnd_stateChanged(int arg1);
 
+    void on_actionCalcBinSum_triggered();
+
 private:
     Ui::MainWindow *ui;
     QSerialPort m_serialPort;
     QString Available_serial_ports;
     QTimer timer;
-
+    MyTools myTools;
     void initUi();
     void initConfig();
     void saveFile();

@@ -22,8 +22,9 @@ void Config::ReadConfig()
         return;
     }
     QString fileName;
-    QDir dir;
-    fileName = dir.currentPath() + "/my.ini";
+    //QDir dir;
+    //fileName = dir.currentPath() + "/my.ini";
+     fileName = QString("D:/SxlSerialPort/my.ini");
     QSettings set(fileName, QSettings::IniFormat);
 
     set.beginGroup("Serial_PortStu_config");
@@ -41,7 +42,8 @@ void Config::WriteConfig()
 {
     QString fileName;
     QDir dir;
-    fileName = dir.currentPath() + "/my.ini";
+//    fileName = dir.currentPath() + "/my.ini";
+    fileName = QString("D:/SxlSerialPort/my.ini");
     QSettings set(fileName, QSettings::IniFormat);
 
     set.beginGroup("Serial_PortStu_config");
@@ -69,7 +71,8 @@ bool Config::CheckConfig()
 //    QString fileName = QString("%1/%2_Config.ini").arg(ConfigPath).arg(ConfigName);
     QString fileName;
     QDir dir;
-    fileName = dir.currentPath() + "/my.ini";
+//    fileName = dir.currentPath() + "/my.ini";
+    fileName = QString("D:/SxlSerialPort/my.ini");
     //如果配置文件大小为0,则以初始值继续运行,并生成配置文件
     QFile file(fileName);
 

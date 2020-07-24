@@ -6,6 +6,7 @@
 #include "config.h"
 #include <QTime>
 #include <QDataStream>
+#include <QFile>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -536,3 +537,27 @@ QByteArray MainWindow::HexStringToByteArray(QString HexString)
      }
      return ret;
  }
+
+
+
+void MainWindow::on_actionCalcBinSum_triggered()
+{
+    QString qfileName;
+    qfileName = QFileDialog::getOpenFileName(this,
+                                             tr("Open file"), "", tr("All Files (*.*);; Bin Files (*.hex *.bin *.exe)"));
+
+    if (!qfileName.isNull())
+    {
+        QByteArray bfileName = qfileName.toLatin1();
+        const char* cfileName=bfileName.data();
+        unsigned int binSum =  myTools.calcIMXCrc(cfileName);
+        QMessageBox::information(NULL, "累加和校验", ("0x"+QString::number(binSum,16)));
+
+    }
+    else
+    {
+        //点是的取消
+    }
+
+}
+

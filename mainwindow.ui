@@ -303,7 +303,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>22</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
@@ -325,6 +325,7 @@
     <property name="title">
      <string>工具</string>
     </property>
+    <addaction name="actionCalcBinSum"/>
    </widget>
    <widget class="QMenu" name="menu_5">
     <property name="title">
@@ -348,8 +349,20 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionCalcBinSum"/>
   </widget>
+  <action name="actionCalcBinSum">
+   <property name="icon">
+    <iconset resource="icon.qrc">
+     <normaloff>:/icon/addSum.png</normaloff>:/icon/addSum.png</iconset>
+   </property>
+   <property name="text">
+    <string>CalcBinSum</string>
+   </property>
+  </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="icon.qrc"/>
+ </resources>
  <connections/>
 </ui>
