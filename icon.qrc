@@ -2,5 +2,12 @@
     <qresource prefix="/">
         <file>icon/bitbug_favicon.ico</file>
         <file>icon/addSum.png</file>
+        <file>icon/about.png</file>
+        <file>icon/close.png</file>
+        <file>icon/new.png</file>
+        <file>icon/open.png</file>
+        <file>icon/save.png</file>
+        <file>icon/saveas.png</file>
+        <file>icon/update.png</file>
     </qresource>
 </RCC>

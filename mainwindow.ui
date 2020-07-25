@@ -310,6 +310,11 @@
     <property name="title">
      <string>文件</string>
     </property>
+    <addaction name="actionNew"/>
+    <addaction name="actionOpen"/>
+    <addaction name="actionClose"/>
+    <addaction name="actionSave"/>
+    <addaction name="actionResave"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
@@ -331,6 +336,8 @@
     <property name="title">
      <string>帮助</string>
     </property>
+    <addaction name="actionAbout"/>
+    <addaction name="actionCheck_Update"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
@@ -349,6 +356,9 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionNew"/>
+   <addaction name="actionOpen"/>
+   <addaction name="actionSave"/>
    <addaction name="actionCalcBinSum"/>
   </widget>
   <action name="actionCalcBinSum">
@@ -361,6 +371,69 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Alt+S</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="icon">
+    <iconset resource="icon.qrc">
+     <normaloff>:/icon/about.png</normaloff>:/icon/about.png</iconset>
+   </property>
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+  <action name="actionCheck_Update">
+   <property name="icon">
+    <iconset resource="icon.qrc">
+     <normaloff>:/icon/update.png</normaloff>:/icon/update.png</iconset>
+   </property>
+   <property name="text">
+    <string>Check Update</string>
+   </property>
+  </action>
+  <action name="actionNew">
+   <property name="icon">
+    <iconset resource="icon.qrc">
+     <normaloff>:/icon/new.png</normaloff>:/icon/new.png</iconset>
+   </property>
+   <property name="text">
+    <string>New</string>
+   </property>
+  </action>
+  <action name="actionOpen">
+   <property name="icon">
+    <iconset resource="icon.qrc">
+     <normaloff>:/icon/open.png</normaloff>:/icon/open.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open</string>
+   </property>
+  </action>
+  <action name="actionClose">
+   <property name="icon">
+    <iconset resource="icon.qrc">
+     <normaloff>:/icon/close.png</normaloff>:/icon/close.png</iconset>
+   </property>
+   <property name="text">
+    <string>Close</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="icon">
+    <iconset resource="icon.qrc">
+     <normaloff>:/icon/save.png</normaloff>:/icon/save.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </action>
+  <action name="actionResave">
+   <property name="icon">
+    <iconset resource="icon.qrc">
+     <normaloff>:/icon/saveas.png</normaloff>:/icon/saveas.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save as</string>
    </property>
   </action>
  </widget>
