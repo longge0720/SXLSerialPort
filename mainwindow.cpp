@@ -7,7 +7,7 @@
 #include <QTime>
 #include <QDataStream>
 #include <QFile>
-
+#include <qtextcodec.h>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -112,6 +112,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::serialPort_readyRead()
 {
+
+    QTextCodec *codec = QTextCodec::codecForName("GBK");
+
     QString nowTime = NULL;
 
     //从接收缓冲区中读取数据
@@ -145,7 +148,9 @@ void MainWindow::serialPort_readyRead()
 
     }else
     {
-        recv += QString(buffer);
+       // buffer = codec->toUnicode(buffer);
+        //recv += QString(buffer);
+        recv+=codec->toUnicode(buffer);
     }
     if(ui->chkAutoLine->isChecked())
     {
@@ -155,6 +160,7 @@ void MainWindow::serialPort_readyRead()
     ui->rcvTxtEdit->clear();
     //重新显示
     ui->rcvTxtEdit->append(recv);
+    //ui->rcvTxtEdit->append(codec->toUnicode(recv));
 }
 
 void MainWindow::on_btnOpen_clicked()
@@ -311,7 +317,8 @@ void MainWindow::on_btnSend_clicked()
 //        sendData = HexStringToByteArray(str);
     }else
     {
-         sendData = str.toUtf8();
+        // sendData = str.toUtf8();
+          sendData =str.toLocal8Bit();
     }
 
 
